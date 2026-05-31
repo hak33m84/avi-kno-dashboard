@@ -431,12 +431,26 @@ function shBd(s){return s==='Pagi'?bd('bt','Pagi'):bd('bg','Malam')}
 const GRID_CLR='rgba(227,234,242,.8)';
 const chartOpts=(stacked=false)=>({
   responsive:true,maintainAspectRatio:false,
+  categoryPercentage:0.82,barPercentage:0.92,
   plugins:{legend:{display:false}},
   scales:{
-    y:{beginAtZero:true,stacked,grid:{color:GRID_CLR,lineWidth:1},border:{dash:[3,3]},ticks:{stepSize:1,font:{size:10}}},
-    x:{stacked,grid:{display:false},ticks:{font:{size:10}}}
+    y:{beginAtZero:true,stacked,grid:{color:GRID_CLR,lineWidth:1},border:{display:false},ticks:{stepSize:1,font:{size:10},padding:6}},
+    x:{stacked,grid:{display:false},border:{display:false},ticks:{font:{size:10},padding:4}}
   }
 });
+// vertical gradient helper
+function vGrad(ctx,area,c1,c2){
+  if(!area)return c1;
+  const g=ctx.createLinearGradient(0,area.bottom,0,area.top);
+  g.addColorStop(0,c2);g.addColorStop(1,c1);
+  return g;
+}
+function hGrad(ctx,area,c1,c2){
+  if(!area)return c1;
+  const g=ctx.createLinearGradient(area.left,0,area.right,0);
+  g.addColorStop(0,c2);g.addColorStop(1,c1);
+  return g;
+}
 
 async function loadDashboard(){
   document.getElementById('last-up').textContent=new Date().toLocaleTimeString('id-ID');
@@ -485,12 +499,12 @@ function renderOV(pagi,malam,dcs,kls,saset,ssp){
   // Bar: PM per kategori
   const pmK={};allPM.forEach(r=>{const n=(r[1]||'').split(' ')[0];pmK[n]=(pmK[n]||0)+1;});
   const kL=Object.keys(pmK).slice(0,8),kV=kL.map(k=>pmK[k]);
-  mk('ch-pm-kat',{type:'bar',data:{labels:kL,datasets:[{data:kV,backgroundColor:'rgba(29,86,215,.18)',borderColor:'#1D56D7',borderWidth:2,borderRadius:5,borderSkipped:false}]},options:chartOpts()});
+  mk('ch-pm-kat',{type:'bar',data:{labels:kL,datasets:[{data:kV,backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#1D56D7','#5B9BFF'),borderRadius:6,borderSkipped:false,maxBarThickness:46}]},options:chartOpts()});
 
   // Line: trend corrective
   const cD={};allCor.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)cD[d]=(cD[d]||0)+1;});
   const cDays=Object.keys(cD).sort(),cV=cDays.map(d=>cD[d]);
-  mk('ch-cor-trend',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{data:cV,borderColor:'#C97B0A',backgroundColor:'rgba(201,123,10,.08)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#C97B0A',pointBorderColor:'#fff',pointBorderWidth:2}]},options:chartOpts()});
+  mk('ch-cor-trend',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{data:cV,borderColor:'#D4810A',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(212,129,10,.02)','rgba(212,129,10,.22)'),borderWidth:2.5,fill:true,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#D4810A',pointBorderColor:'#fff',pointBorderWidth:2}]},options:chartOpts()});
 
   // Donut: status aset
   const belA=totA-sudA;
@@ -519,7 +533,7 @@ function renderPR(pagi,malam){
   document.getElementById('pr-count').textContent=tot+' laporan';
   const dm={};[...pagi,...malam].forEach(r=>{const d=(r[0]||'').replace(/'/g,'');dm[d]=(dm[d]||0)+1;});
   const days=Object.keys(dm).sort();
-  mk('ch-pm-hari',{type:'bar',data:{labels:days.map(d=>d.split('/')[0]),datasets:[{data:days.map(d=>dm[d]),backgroundColor:'rgba(7,130,168,.18)',borderColor:'#0782A8',borderWidth:2,borderRadius:5,borderSkipped:false}]},options:chartOpts()});
+  mk('ch-pm-hari',{type:'bar',data:{labels:days.map(d=>d.split('/')[0]),datasets:[{data:days.map(d=>dm[d]),backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#0782A8','#22C3E6'),borderRadius:6,borderSkipped:false,maxBarThickness:54}]},options:chartOpts()});
   mk('ch-pm-shift',{type:'doughnut',data:{labels:['Shift Pagi','Shift Malam'],datasets:[{data:[pagi.length,malam.length],backgroundColor:['#0782A8','#0D9668'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   const all=[...pagi.map(r=>[...r,'Pagi']),...malam.map(r=>[...r,'Malam'])];
   document.getElementById('pr-tbl').innerHTML=all.length?
@@ -551,7 +565,7 @@ function renderCO(dcs,kls){
   mk('ch-cor-status',{type:'doughnut',data:{labels:['Selesai','Pending','Lainnya'],datasets:[{data:[sel,pen,Math.max(lain,0)],backgroundColor:['#0D9668','#C97B0A','#8FA3BB'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   const cD={};all.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)cD[d]=(cD[d]||0)+1;});
   const cDays=Object.keys(cD).sort();
-  mk('ch-cor-line',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{data:cDays.map(d=>cD[d]),borderColor:'#1D56D7',backgroundColor:'rgba(29,86,215,.08)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#1D56D7',pointBorderColor:'#fff',pointBorderWidth:2}]},options:chartOpts()});
+  mk('ch-cor-line',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{data:cDays.map(d=>cD[d]),borderColor:'#1D56D7',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(29,86,215,.02)','rgba(29,86,215,.22)'),borderWidth:2.5,fill:true,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#1D56D7',pointBorderColor:'#fff',pointBorderWidth:2}]},options:chartOpts()});
   function tbl(rows,el){
     document.getElementById(el).innerHTML=rows.length?
       '<table><thead><tr><th>Deskripsi</th><th>PIC</th><th>Klasifikasi</th><th>Status</th><th>Tgl Mulai</th><th>MTTR</th></tr></thead><tbody>'+
@@ -570,7 +584,7 @@ function renderSP(ssp){
   document.getElementById('sp-men').textContent=men.length;
   document.getElementById('sp-kos').textContent=kos.length;
   const top=ssp.slice(0,10);
-  mk('ch-sp-bar',{type:'bar',data:{labels:top.map(r=>(r[0]||'').split(' ').slice(0,3).join(' ')),datasets:[{data:top.map(r=>parseInt(r[3]||0)),backgroundColor:top.map(r=>r[5]&&r[5].includes('Kosong')?'rgba(200,30,30,.2)':r[5]&&r[5].includes('Menipis')?'rgba(201,123,10,.2)':'rgba(13,150,104,.2)'),borderColor:top.map(r=>r[5]&&r[5].includes('Kosong')?'#C81E1E':r[5]&&r[5].includes('Menipis')?'#C97B0A':'#0D9668'),borderWidth:2,borderRadius:5,borderSkipped:false}]},options:{...chartOpts(),indexAxis:'y',scales:{x:{beginAtZero:true,grid:{color:GRID_CLR},border:{dash:[3,3]},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  mk('ch-sp-bar',{type:'bar',data:{labels:top.map(r=>(r[0]||'').split(' ').slice(0,3).join(' ')),datasets:[{data:top.map(r=>parseInt(r[3]||0)),backgroundColor:top.map(r=>r[5]&&r[5].includes('Kosong')?'#E03B3B':r[5]&&r[5].includes('Menipis')?'#E8920F':'#13A574'),borderRadius:5,borderSkipped:false,maxBarThickness:18}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',categoryPercentage:0.88,barPercentage:0.9,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:GRID_CLR},border:{display:false},ticks:{font:{size:10},padding:4}},y:{grid:{display:false},border:{display:false},ticks:{font:{size:10},padding:4}}}}});
   mk('ch-sp-donut',{type:'doughnut',data:{labels:['Aman','Menipis','Kosong'],datasets:[{data:[aman.length,men.length,kos.length],backgroundColor:['#0D9668','#C97B0A','#C81E1E'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   function list(items,cls,el){
     document.getElementById(el).innerHTML=items.length?
@@ -592,7 +606,7 @@ function renderAS(saset,maset){
   document.getElementById('as-sud').textContent=sud;
   document.getElementById('as-bel').textContent=bel;
   document.getElementById('as-pct').textContent=pct+'%';
-  mk('ch-aset-bar',{type:'bar',data:{labels:saset.map(r=>r[0]||'?'),datasets:[{label:'Sudah PM',data:saset.map(r=>parseInt(r[2]||0)),backgroundColor:'rgba(13,150,104,.2)',borderColor:'#0D9668',borderWidth:2,borderRadius:5,borderSkipped:false,stack:'s'},{label:'Belum PM',data:saset.map(r=>parseInt(r[1]||0)-parseInt(r[2]||0)),backgroundColor:'rgba(200,30,30,.12)',borderColor:'rgba(200,30,30,.4)',borderWidth:2,borderRadius:5,borderSkipped:false,stack:'s'}]},options:{...chartOpts(true),plugins:{legend:{display:true,labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-aset-bar',{type:'bar',data:{labels:saset.map(r=>r[0]||'?'),datasets:[{label:'Sudah PM',data:saset.map(r=>parseInt(r[2]||0)),backgroundColor:'#13A574',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40},{label:'Belum PM',data:saset.map(r=>parseInt(r[1]||0)-parseInt(r[2]||0)),backgroundColor:'#E8B4B4',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40}]},options:{...chartOpts(true),plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}}}});
   mk('ch-aset-donut2',{type:'doughnut',data:{labels:['Sudah PM','Belum PM'],datasets:[{data:[sud,bel],backgroundColor:['#0D9668','#C81E1E'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   document.getElementById('as-tbl').innerHTML=maset.length?
     '<table><thead><tr><th>Kategori</th><th>Nama Aset</th><th>PM Terakhir</th><th>Frekuensi</th><th>Status</th><th>Personel</th></tr></thead><tbody>'+
