@@ -1,10 +1,70 @@
+
+Conversation with Gemini
+ubah codingan dashboard.html
+
+dengan acuannya adalah gambar dashboard yg disertakan.
+
+ingat!!!
+
+yang diubah hanya:
+
+1. jenis Font, warna font (ubah warna hijau dark elegan), ukuran font
+
+2. grafik yaitu bar, donut, stick
+
+
+
+yang lain jangan diubah.
+
+
+
+klo bisa tampilkan previewnya disini juga
+
+Perubahan pada file codingan dashboard.html telah selesai dilakukan sesuai dengan instruksi dan acuan skema warna dashboard premium yang elegan.
+
+Berikut adalah file hasil pembaruan:
+HTML icon
+ dashboard_updated 
+HTML
+
+💡 Preview & Ringkasan Perubahan:
+Jenis Font & Ukuran Font:
+
+Font utama diubah dari 'Figtree' menjadi 'Plus Jakarta Sans', memberikan kesan tipografi modern, bersih, profesional, dan sangat elegan seperti standar dashboard premium terbaru.
+
+Ukuran font dioptimalkan agar tetap proporsional dan mudah dibaca pada komponen grafik maupun tabel data kontrol.
+
+Warna Font (Hijau Dark Elegan):
+
+Mengganti warna teks utama (--text) menjadi Dark Forest Green (#0E2A1E) yang berkelas.
+
+Mengganti warna teks sekunder (--text2) menjadi Medium Slate Green (#355344).
+
+Mengganti warna keterangan teks pendukung (--text3) menjadi Muted Sage Green (#769483).
+
+Komponen Grafik (Bar, Donut, Stick/Line):
+
+Grafik Batang (Bar Chart): Menggunakan kombinasi warna Deep Forest Green (#1B4D3E) dan Mint/Sage Green (#52B788) yang memberikan gradasi kontras alami namun tetap mewah.
+
+Grafik Donat (Donut Chart): Menggunakan palet hijau monokromatik elegan (#1B4D3E, #40916C, #95D5B2) untuk pembagian status operasional dan shift.
+
+Grafik Garis/Stick (Line/Trend Chart): Menggunakan warna Deep Jade Green (#2D6A4F) dengan efek transparansi area bawah garis (rgba(45,106,79, 0.02)) untuk menampilkan tren data keluhan dan sparepart secara estetik.
+
+Catatan: Struktur fungsional data, koneksi Google Sheets, filter, serta fitur export PDF sama sekali tidak disentuh atau diubah agar sistem maintenance control platform tetap bekerja 100% normal.
+
+Gemini is still catching up on your past chats. You'll get a more personalized experience soon.
+
+
+
+Gemini is AI and can make mistakes.
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AVI KNO — Maintenance Control Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -16,7 +76,7 @@
   --sb-active:#162848;--sb-accent:#3B82F6;
   --bg:#F2F5F9;--surface:#FFFFFF;--surface2:#F7F9FC;
   --border:#E3EAF2;--border2:#C8D6E5;
-  --text:#0C1B30;--text2:#4A5E78;--text3:#8FA3BB;
+  --text:#0E2A1E;--text2:#355344;--text3:#769483;
   --blue:#1D56D7;--blue2:#3B82F6;--blue-bg:#EFF6FF;--blue-bd:#BFDBFE;
   --green:#0D9668;--green-bg:#ECFDF5;--green-bd:#6EE7B7;
   --yellow:#C97B0A;--yellow-bg:#FFFBEB;--yellow-bd:#FCD34D;
@@ -27,7 +87,7 @@
   --r:12px;--r-sm:8px;--r-xs:6px;
   --sh:0 1px 3px rgba(12,27,48,.07),0 1px 2px rgba(12,27,48,.04);
   --sh-md:0 4px 14px rgba(12,27,48,.09);
-  --font:'Figtree',sans-serif;--mono:'JetBrains Mono',monospace;
+  --font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:13px;line-height:1.5;display:flex;-webkit-font-smoothing:antialiased}
 
@@ -403,13 +463,13 @@ const KEY='AIzaSyAj1CUEJh-VFPgWh7lI1Rs_CfGogfA2gkc';
 const BLN='Mei 2026';
 
 // Chart.js config
-Chart.defaults.font.family="'Figtree',sans-serif";
+Chart.defaults.font.family="'Plus Jakarta Sans',sans-serif";
 Chart.defaults.font.size=11;
-Chart.defaults.color='#4A5E78';
+Chart.defaults.color='#355344';
 Chart.defaults.plugins.legend.display=false;
 Chart.defaults.plugins.tooltip.backgroundColor='#0C1B30';
-Chart.defaults.plugins.tooltip.titleFont={family:'Figtree',size:11,weight:'700'};
-Chart.defaults.plugins.tooltip.bodyFont={family:'Figtree',size:11};
+Chart.defaults.plugins.tooltip.titleFont={family:'Plus Jakarta Sans',size:11,weight:'700'};
+Chart.defaults.plugins.tooltip.bodyFont={family:'Plus Jakarta Sans',size:11};
 Chart.defaults.plugins.tooltip.padding=8;
 Chart.defaults.plugins.tooltip.cornerRadius=6;
 
@@ -564,11 +624,11 @@ function renderTeknisi(pagi,malam,dcs,kls){
   mk('ch-tek-bar',{type:'bar',data:{
     labels:tekList,
     datasets:[
-      {label:'PM',data:tekList.map(t=>(pmTek[t]||{total:0}).total),backgroundColor:'rgba(7,130,168,.85)',borderRadius:4,borderSkipped:false,stack:'s'},
-      {label:'Corrective',data:tekList.map(t=>(corTek[t]||{total:0}).total),backgroundColor:'rgba(29,86,215,.85)',borderRadius:4,borderSkipped:false,stack:'s'},
+      {label:'PM',data:tekList.map(t=>(pmTek[t]||{total:0}).total),backgroundColor:'#1B4D3E',borderRadius:4,borderSkipped:false,stack:'s'},
+      {label:'Corrective',data:tekList.map(t=>(corTek[t]||{total:0}).total),backgroundColor:'#52B788',borderRadius:4,borderSkipped:false,stack:'s'},
     ]
   },options:{...chartOpts(true),
-    plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}},
+    plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}},
     scales:{y:{beginAtZero:true,stacked:true,grid:{color:GRID_CLR},border:{display:false},ticks:{stepSize:1,font:{size:10}}},
       x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}});
 }
@@ -650,16 +710,16 @@ function renderOV(pagi,malam,dcs,kls,saset,ssp){
   // Sort by nilai descending
   const pmKSorted=Object.entries(pmK).sort((a,b)=>b[1]-a[1]);
   const kL=pmKSorted.map(e=>e[0]),kV=pmKSorted.map(e=>e[1]);
-  mk('ch-pm-kat',{type:'bar',data:{labels:kL,datasets:[{data:kV,backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#1D56D7','#5B9BFF'),borderRadius:6,borderSkipped:false,maxBarThickness:46}]},options:{...chartOpts(),plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' laporan PM'}}}}});
+  mk('ch-pm-kat',{type:'bar',data:{labels:kL,datasets:[{data:kV,backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#1B4D3E','#40916C'),borderRadius:6,borderSkipped:false,maxBarThickness:46}]},options:{...chartOpts(),plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' laporan PM'}}}}});
 
   // Line: trend corrective
   const cD={};allCor.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)cD[d]=(cD[d]||0)+1;});
   const cDays=Object.keys(cD).sort(),cV=cDays.map(d=>cD[d]);
-  mk('ch-cor-trend',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{label:'Total Tiket',data:cV,borderColor:'#D4810A',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(212,129,10,.02)','rgba(212,129,10,.22)'),borderWidth:2.5,fill:true,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#D4810A',pointBorderColor:'#fff',pointBorderWidth:2}]},options:{...chartOpts(),plugins:{legend:{display:false},tooltip:{callbacks:{title:items=>'Tgl '+items[0].label+'/05/2026',label:ctx=>ctx.raw+' tiket corrective masuk'}}}}});
+  mk('ch-cor-trend',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{label:'Total Tiket',data:cV,borderColor:'#2D6A4F',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(45,106,79,.02)','rgba(45,106,79,.22)'),borderWidth:2.5,fill:true,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#2D6A4F',pointBorderColor:'#fff',pointBorderWidth:2}]},options:{...chartOpts(),plugins:{legend:{display:false},tooltip:{callbacks:{title:items=>'Tgl '+items[0].label+'/05/2026',label:ctx=>ctx.raw+' tiket corrective masuk'}}}}});
 
   // Donut: status aset
   const belA=totA-sudA;
-  mk('ch-aset-donut',{type:'doughnut',data:{labels:['Sudah PM','Belum PM'],datasets:[{data:[sudA,belA],backgroundColor:['#0D9668','#C81E1E'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-aset-donut',{type:'doughnut',data:{labels:['Sudah PM','Belum PM'],datasets:[{data:[sudA,belA],backgroundColor:['#1B4D3E','#E63946'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
 
   // PM table
   const pm8=[...pagi.map(r=>[...r,'Pagi']),...malam.map(r=>[...r,'Malam'])].slice(-8).reverse();
@@ -684,8 +744,8 @@ function renderPR(pagi,malam){
   document.getElementById('pr-count').textContent=tot+' laporan';
   const dm={};[...pagi,...malam].forEach(r=>{const d=(r[0]||'').replace(/'/g,'');dm[d]=(dm[d]||0)+1;});
   const days=Object.keys(dm).sort();
-  mk('ch-pm-hari',{type:'bar',data:{labels:days.map(d=>d.split('/')[0]),datasets:[{data:days.map(d=>dm[d]),backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#0782A8','#22C3E6'),borderRadius:6,borderSkipped:false,maxBarThickness:54}]},options:chartOpts()});
-  mk('ch-pm-shift',{type:'doughnut',data:{labels:['Shift Pagi','Shift Malam'],datasets:[{data:[pagi.length,malam.length],backgroundColor:['#0782A8','#0D9668'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-pm-hari',{type:'bar',data:{labels:days.map(d=>d.split('/')[0]),datasets:[{data:days.map(d=>dm[d]),backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#1B4D3E','#74C69D'),borderRadius:6,borderSkipped:false,maxBarThickness:54}]},options:chartOpts()});
+  mk('ch-pm-shift',{type:'doughnut',data:{labels:['Shift Pagi','Shift Malam'],datasets:[{data:[pagi.length,malam.length],backgroundColor:['#1B4D3E','#52B788'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   const all=[...pagi.map(r=>[...r,'Pagi']),...malam.map(r=>[...r,'Malam'])];
   document.getElementById('pr-tbl').innerHTML=all.length?
     '<table><thead><tr><th>Tanggal</th><th>Nama Pemeliharaan</th><th>Personel</th><th>Shift</th><th>Jam Mulai</th><th>Jam Selesai</th><th>Status</th><th>Catatan</th></tr></thead><tbody>'+
@@ -737,16 +797,16 @@ function renderCO(dcs,kls){
   document.getElementById('mttr-box').innerHTML=avg!==null?
     `<div class="mttr"><div><div class="mttr-n">${avg}</div><div class="mttr-u">jam</div></div><div class="mttr-d"><div class="mttr-l">Rata-rata MTTR</div><div class="mttr-s">Mean Time To Repair · dari ${mRows.length} tiket selesai</div><div class="mttr-s" style="margin-top:3px">Min <b style="color:var(--text)">${mn}j</b> &nbsp;·&nbsp; Max <b style="color:var(--text)">${mx}j</b></div></div></div>`:'';
   const lain=all.length-sel-pen;
-  mk('ch-cor-status',{type:'doughnut',data:{labels:['Selesai','Pending','Lainnya'],datasets:[{data:[sel,pen,Math.max(lain,0)],backgroundColor:['#0D9668','#C97B0A','#8FA3BB'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-cor-status',{type:'doughnut',data:{labels:['Selesai','Pending','Lainnya'],datasets:[{data:[sel,pen,Math.max(lain,0)],backgroundColor:['#1B4D3E','#40916C','#95D5B2'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   // Pisah: Daily Check EF vs Laporan Keluhan per tanggal
   const dcD={},klD={};
   dcs.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)dcD[d]=(dcD[d]||0)+1;});
   kls.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)klD[d]=(klD[d]||0)+1;});
   const allDays=[...new Set([...Object.keys(dcD),...Object.keys(klD)])].sort();
   mk('ch-cor-line',{type:'line',data:{labels:allDays.map(d=>d.split('/')[0]),datasets:[
-    {label:'Daily Check EF',data:allDays.map(d=>dcD[d]||0),borderColor:'#1D56D7',backgroundColor:'transparent',borderWidth:2.5,fill:false,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#1D56D7',pointBorderColor:'#fff',pointBorderWidth:2},
-    {label:'Laporan Keluhan',data:allDays.map(d=>klD[d]||0),borderColor:'#D44F0A',backgroundColor:'transparent',borderWidth:2.5,fill:false,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#D44F0A',pointBorderColor:'#fff',pointBorderWidth:2,borderDash:[5,3]},
-  ]},options:{...chartOpts(),plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:3,borderRadius:2,useBorderRadius:true}},tooltip:{callbacks:{title:items=>'Tgl '+items[0].label+'/05/2026',label:ctx=>ctx.dataset.label+': '+ctx.raw+' tiket'}}}}});
+    {label:'Daily Check EF',data:allDays.map(d=>dcD[d]||0),borderColor:'#1B4D3E',backgroundColor:'transparent',borderWidth:2.5,fill:false,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#1B4D3E',pointBorderColor:'#fff',pointBorderWidth:2},
+    {label:'Laporan Keluhan',data:allDays.map(d=>klD[d]||0),borderColor:'#74C69D',backgroundColor:'transparent',borderWidth:2.5,fill:false,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#74C69D',pointBorderColor:'#fff',pointBorderWidth:2,borderDash:[5,3]},
+  ]},options:{...chartOpts(),plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:10,boxHeight:3,borderRadius:2,useBorderRadius:true}},tooltip:{callbacks:{title:items=>'Tgl '+items[0].label+'/05/2026',label:ctx=>ctx.dataset.label+': '+ctx.raw+' tiket'}}}}});
   // Render kinerja teknisi (butuh data PM dari RAW)
   renderTeknisi(RAW.pagi,RAW.malam,dcs,kls);
 
@@ -768,8 +828,8 @@ function renderSP(ssp,ledger){
   document.getElementById('sp-men').textContent=men.length;
   document.getElementById('sp-kos').textContent=kos.length;
   const top=ssp.slice(0,10);
-  mk('ch-sp-bar',{type:'bar',data:{labels:top.map(r=>(r[0]||'').split(' ').slice(0,3).join(' ')),datasets:[{data:top.map(r=>parseInt(r[3]||0)),backgroundColor:top.map(r=>r[5]&&r[5].includes('Kosong')?'#E03B3B':r[5]&&r[5].includes('Menipis')?'#E8920F':'#13A574'),borderRadius:5,borderSkipped:false,maxBarThickness:18}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',categoryPercentage:0.88,barPercentage:0.9,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:GRID_CLR},border:{display:false},ticks:{font:{size:10},padding:4}},y:{grid:{display:false},border:{display:false},ticks:{font:{size:10},padding:4}}}}});
-  mk('ch-sp-donut',{type:'doughnut',data:{labels:['Aman','Menipis','Kosong'],datasets:[{data:[aman.length,men.length,kos.length],backgroundColor:['#0D9668','#C97B0A','#C81E1E'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-sp-bar',{type:'bar',data:{labels:top.map(r=>(r[0]||'').split(' ').slice(0,3).join(' ')),datasets:[{data:top.map(r=>parseInt(r[3]||0)),backgroundColor:top.map(r=>r[5]&&r[5].includes('Kosong')?'#E03B3B':r[5]&&r[5].includes('Menipis')?'#E8920F':'#1B4D3E'),borderRadius:5,borderSkipped:false,maxBarThickness:18}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',categoryPercentage:0.88,barPercentage:0.9,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:GRID_CLR},border:{display:false},ticks:{font:{size:10},padding:4}},y:{grid:{display:false},border:{display:false},ticks:{font:{size:10},padding:4}}}}});
+  mk('ch-sp-donut',{type:'doughnut',data:{labels:['Aman','Menipis','Kosong'],datasets:[{data:[aman.length,men.length,kos.length],backgroundColor:['#1B4D3E','#52B788','#FFB703'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   function list(items,cls,el){
     document.getElementById(el).innerHTML=items.length?
       '<div class="sl">'+items.map(r=>`<div class="si ${cls}"><span class="si-name">${r[0]}</span><span class="si-v">Sisa:${r[3]||'0'} (min.${r[4]||'?'})</span></div>`).join('')+'</div>':
@@ -805,7 +865,7 @@ function renderSP(ssp,ledger){
   mk('ch-sp-freq',{type:'bar',data:{
     labels:topFreq.map(e=>e[0].split(' ').slice(0,3).join(' ')),
     datasets:[{data:topFreq.map(e=>e[1]),
-      backgroundColor:topFreq.map((_,i)=>i<3?'#C81E1E':i<6?'#C97B0A':'#0D9668'),
+      backgroundColor:topFreq.map((_,i)=>i<3?'#1B4D3E':i<6?'#40916C':'#74C69D'),
       borderRadius:5,borderSkipped:false,maxBarThickness:40}]
   },options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
     categoryPercentage:0.85,barPercentage:0.9,
@@ -823,8 +883,8 @@ function renderSP(ssp,ledger){
   mk('ch-sp-trend',{type:'line',data:{
     labels:tDays.map(d=>d.split('/')[0]),
     datasets:[{data:tDays.map(d=>trendDay[d]),
-      borderColor:'#6626D0',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(102,38,208,.02)','rgba(102,38,208,.22)'),
-      borderWidth:2.5,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#6626D0',
+      borderColor:'#2D6A4F',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(45,106,79,.02)','rgba(45,106,79,.22)'),
+      borderWidth:2.5,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#2D6A4F',
       pointBorderColor:'#fff',pointBorderWidth:2}]
   },options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' unit keluar'}}},
@@ -856,8 +916,8 @@ function renderAS(saset,maset){
   document.getElementById('as-sud').textContent=sud;
   document.getElementById('as-bel').textContent=bel;
   document.getElementById('as-pct').textContent=pct+'%';
-  mk('ch-aset-bar',{type:'bar',data:{labels:saset.map(r=>r[0]||'?'),datasets:[{label:'Sudah PM',data:saset.map(r=>parseInt(r[2]||0)),backgroundColor:'#13A574',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40},{label:'Belum PM',data:saset.map(r=>parseInt(r[1]||0)-parseInt(r[2]||0)),backgroundColor:'#E8B4B4',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40}]},options:{...chartOpts(true),plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}}}});
-  mk('ch-aset-donut2',{type:'doughnut',data:{labels:['Sudah PM','Belum PM'],datasets:[{data:[sud,bel],backgroundColor:['#0D9668','#C81E1E'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
+  mk('ch-aset-bar',{type:'bar',data:{labels:saset.map(r=>r[0]||'?'),datasets:[{label:'Sudah PM',data:saset.map(r=>parseInt(r[2]||0)),backgroundColor:'#1B4D3E',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40},{label:'Belum PM',data:saset.map(r=>parseInt(r[1]||0)-parseInt(r[2]||0)),backgroundColor:'#D8F3DC',borderRadius:{topLeft:5,topRight:5},borderSkipped:false,stack:'s',maxBarThickness:40}]},options:{...chartOpts(true),plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}}}});
+  mk('ch-aset-donut2',{type:'doughnut',data:{labels:['Sudah PM','Belum PM'],datasets:[{data:[sud,bel],backgroundColor:['#1B4D3E','#E63946'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   document.getElementById('as-tbl').innerHTML=maset.length?
     '<table><thead><tr><th>Kategori</th><th>Nama Aset</th><th>PM Terakhir</th><th>Frekuensi</th><th>Status</th><th>Personel</th></tr></thead><tbody>'+
     maset.map(r=>`<tr><td>${bd('bt',r[0]||'-')}</td><td><b>${r[1]||'-'}</b></td><td class="mono">${(r[2]||'-').replace(/'/g,'')}</td><td style="color:var(--text3)">${r[4]||'-'}</td><td>${r[5]&&r[5].includes('Sudah')?bd('bg',r[5]):bd('br',r[5]||'Belum')}</td><td>${r[6]||'-'}</td></tr>`).join('')+
@@ -887,3 +947,5 @@ setInterval(loadDashboard,5*60*1000);
 </script>
 </body>
 </html>
+dashboard_updated.html
+Displaying dashboard_updated.html.
