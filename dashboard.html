@@ -292,6 +292,29 @@ tr:hover td{background:#F4F8FF}
         <div class="card"><div class="ch"><div class="ct"><span class="ci">⚒</span>Daily Check EF</div><div class="ca"><span class="ctag" id="dc-ct">--</span></div></div><div class="tw" id="co-dc"><div class="loading"><div class="spin"></div>Memuat...</div></div></div>
         <div class="card"><div class="ch"><div class="ct"><span class="ci">◉</span>Laporan Keluhan</div><div class="ca"><span class="ctag" id="kl-ct">--</span></div></div><div class="tw" id="co-kl"><div class="loading"><div class="spin"></div>Memuat...</div></div></div>
       </div>
+      <!-- KINERJA TEKNISI -->
+      <div class="card" style="margin-top:12px">
+        <div class="ch">
+          <div class="ct"><span class="ci">◉</span>Kinerja Teknisi</div>
+          <div class="ca">
+            <span class="ctag" id="tek-info">PM + Corrective</span>
+          </div>
+        </div>
+        <div class="g2" style="padding:14px 16px;gap:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Preventive Maintenance</div>
+            <div class="tw" id="tek-pm-tbl"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Corrective</div>
+            <div class="tw" id="tek-cor-tbl"></div>
+          </div>
+        </div>
+        <div style="padding:0 16px 14px">
+          <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Bar — Jumlah Tugas per Teknisi</div>
+          <div style="height:180px"><canvas id="ch-tek-bar"></canvas></div>
+        </div>
+      </div>
     </div>
 
     <!-- SPAREPART -->
@@ -311,6 +334,24 @@ tr:hover td{background:#F4F8FF}
         <div class="card"><div class="ch"><div class="ct"><span class="ci">△</span>Stok Menipis</div></div><div class="cb" id="sp-men-list"><div class="loading"><div class="spin"></div>Memuat...</div></div></div>
       </div>
       <div class="card"><div class="ch"><div class="ct"><span class="ci">≡</span>Inventaris Lengkap</div></div><div class="tw" id="sp-tbl"><div class="loading"><div class="spin"></div>Memuat...</div></div></div>
+      <!-- SPAREPART SERING HABIS -->
+      <div class="card" style="margin-top:12px">
+        <div class="ch"><div class="ct"><span class="ci">▦</span>Sparepart Sering Habis — Analisa Konsumsi Bulan Ini</div></div>
+        <div class="g2" style="padding:14px 16px;gap:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Frekuensi Pemakaian (kali keluar)</div>
+            <div style="height:200px"><canvas id="ch-sp-freq"></canvas></div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Trend Pemakaian Harian (qty keluar)</div>
+            <div style="height:200px"><canvas id="ch-sp-trend"></canvas></div>
+          </div>
+        </div>
+        <div style="padding:0 16px 14px">
+          <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ranking Prioritas Pengadaan</div>
+          <div class="tw" id="sp-ranking"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ASET -->
@@ -347,7 +388,7 @@ Chart.defaults.plugins.tooltip.bodyFont={family:'Figtree',size:11};
 Chart.defaults.plugins.tooltip.padding=8;
 Chart.defaults.plugins.tooltip.cornerRadius=6;
 
-let RAW={pagi:[],malam:[],dcs:[],kls:[],saset:[],maset:[],ssp:[]};
+let RAW={pagi:[],malam:[],dcs:[],kls:[],saset:[],maset:[],ssp:[],ledger:[]};
 let CHS={};
 
 setInterval(()=>{
@@ -452,10 +493,65 @@ function hGrad(ctx,area,c1,c2){
   return g;
 }
 
+function renderTeknisi(pagi,malam,dcs,kls){
+  // ── PM per teknisi ──
+  const pmTek={};
+  [...pagi,...malam].forEach(r=>{
+    const t=(r[2]||'Tidak diketahui').trim();
+    if(!pmTek[t])pmTek[t]={total:0,selesai:0,belum:0};
+    pmTek[t].total++;
+    if((r[3]||'').toLowerCase().includes('sudah'))pmTek[t].selesai++;
+    else pmTek[t].belum++;
+  });
+  // ── Corrective per teknisi ──
+  const corTek={};
+  [...dcs,...kls].forEach(r=>{
+    const t=(r[4]||'Tidak diketahui').trim();
+    if(!corTek[t])corTek[t]={total:0,selesai:0,pending:0,mttrSum:0,mttrCount:0};
+    corTek[t].total++;
+    if((r[5]||'').toLowerCase().includes('selesai'))corTek[t].selesai++;
+    else corTek[t].pending++;
+    const m=parseInt(r[12]||0);
+    if(m>0){corTek[t].mttrSum+=m;corTek[t].mttrCount++;}
+  });
+  // ── PM table ──
+  const pmRows=Object.entries(pmTek).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('tek-pm-tbl').innerHTML=pmRows.length?
+    '<table><thead><tr><th>Teknisi</th><th style="text-align:right">Total PM</th><th style="text-align:right">Selesai</th><th style="text-align:right">Belum</th><th>Rate</th></tr></thead><tbody>'+
+    pmRows.map(([t,v])=>{
+      const rate=v.total>0?Math.round(v.selesai/v.total*100):0;
+      const rb=rate===100?bd('bg',rate+'%'):rate>=80?bd('by',rate+'%'):bd('br',rate+'%');
+      return`<tr><td><b>${t}</b></td><td class="mono" style="text-align:right">${v.total}</td><td class="mono" style="text-align:right;color:var(--green)">${v.selesai}</td><td class="mono" style="text-align:right;color:${v.belum>0?'var(--red)':'var(--text3)'}">${v.belum}</td><td>${rb}</td></tr>`;
+    }).join('')+'</tbody></table>':'<div class="empty">Belum ada data PM</div>';
+  // ── Corrective table ──
+  const corRows=Object.entries(corTek).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('tek-cor-tbl').innerHTML=corRows.length?
+    '<table><thead><tr><th>Teknisi</th><th style="text-align:right">Total</th><th style="text-align:right">Selesai</th><th style="text-align:right">Pending</th><th style="text-align:right">Avg MTTR</th></tr></thead><tbody>'+
+    corRows.map(([t,v])=>{
+      const avgM=v.mttrCount>0?Math.round(v.mttrSum/v.mttrCount):null;
+      const mttrBd=avgM===null?'<span style="color:var(--text3)">—</span>':avgM<=24?bd('bg',avgM+'j'):avgM<=72?bd('by',avgM+'j'):bd('br',avgM+'j');
+      const pBd=v.pending>0?`<span style="color:var(--red);font-weight:700">${v.pending}</span>`:`<span style="color:var(--text3)">0</span>`;
+      return`<tr><td><b>${t}</b></td><td class="mono" style="text-align:right">${v.total}</td><td class="mono" style="text-align:right;color:var(--green)">${v.selesai}</td><td class="mono" style="text-align:right">${pBd}</td><td>${mttrBd}</td></tr>`;
+    }).join('')+'</tbody></table>':'<div class="empty">Belum ada data corrective</div>';
+  // ── Bar chart gabungan ──
+  const allTek=new Set([...Object.keys(pmTek),...Object.keys(corTek)]);
+  const tekList=[...allTek].filter(t=>t!=='Personel Pemeliharaan').sort();
+  mk('ch-tek-bar',{type:'bar',data:{
+    labels:tekList,
+    datasets:[
+      {label:'PM',data:tekList.map(t=>(pmTek[t]||{total:0}).total),backgroundColor:'rgba(7,130,168,.85)',borderRadius:4,borderSkipped:false,stack:'s'},
+      {label:'Corrective',data:tekList.map(t=>(corTek[t]||{total:0}).total),backgroundColor:'rgba(29,86,215,.85)',borderRadius:4,borderSkipped:false,stack:'s'},
+    ]
+  },options:{...chartOpts(true),
+    plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}},
+    scales:{y:{beginAtZero:true,stacked:true,grid:{color:GRID_CLR},border:{display:false},ticks:{stepSize:1,font:{size:10}}},
+      x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}});
+}
+
 async function loadDashboard(){
   document.getElementById('last-up').textContent=new Date().toLocaleTimeString('id-ID');
   try{
-    const[pp,pm,dc,kl,sa,ma,ss]=await Promise.all([
+    const[pp,pm,dc,kl,sa,ma,ss,stokLedger]=await Promise.all([
       fetchSheet(`'Prev Pagi ${BLN}'!A:H`),
       fetchSheet(`'Prev Malam ${BLN}'!A:H`),
       fetchSheet(`'Daily Check EF ${BLN}'!A:N`),
@@ -463,8 +559,9 @@ async function loadDashboard(){
       fetchSheet("'Summary Aset'!A:G"),
       fetchSheet("'Master Aset'!A:H"),
       fetchSheet("'Summary SP'!A:G"),
+      fetchSheet("'Stok SP'!A:K"),
     ]);
-    RAW={pagi:pp.slice(1),malam:pm.slice(1),dcs:dc.slice(1),kls:kl.slice(1),saset:sa.slice(1),maset:ma.slice(1),ssp:ss.slice(1)};
+    RAW={pagi:pp.slice(1),malam:pm.slice(1),dcs:dc.slice(1),kls:kl.slice(1),saset:sa.slice(1),maset:ma.slice(1),ssp:ss.slice(1),ledger:stokLedger.slice(1)};
     document.getElementById('nb-preventive').textContent=RAW.pagi.length+RAW.malam.length;
     document.getElementById('nb-corrective').textContent=RAW.dcs.length+RAW.kls.length;
     document.getElementById('nb-sparepart').textContent=RAW.ssp.filter(r=>r[5]&&!r[5].includes('Aman')).length;
@@ -472,7 +569,7 @@ async function loadDashboard(){
     renderOV(RAW.pagi,RAW.malam,RAW.dcs,RAW.kls,RAW.saset,RAW.ssp);
     renderPR(RAW.pagi,RAW.malam);
     renderCO(RAW.dcs,RAW.kls);
-    renderSP(RAW.ssp);
+    renderSP(RAW.ssp,RAW.ledger);
     renderAS(RAW.saset,RAW.maset);
   }catch(e){document.getElementById('last-up').textContent='Error';}
 }
@@ -566,6 +663,9 @@ function renderCO(dcs,kls){
   const cD={};all.forEach(r=>{const d=(r[6]||'').replace(/'/g,'');if(d)cD[d]=(cD[d]||0)+1;});
   const cDays=Object.keys(cD).sort();
   mk('ch-cor-line',{type:'line',data:{labels:cDays.map(d=>d.split('/')[0]),datasets:[{data:cDays.map(d=>cD[d]),borderColor:'#1D56D7',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(29,86,215,.02)','rgba(29,86,215,.22)'),borderWidth:2.5,fill:true,tension:.4,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#1D56D7',pointBorderColor:'#fff',pointBorderWidth:2}]},options:chartOpts()});
+  // Render kinerja teknisi (butuh data PM dari RAW)
+  renderTeknisi(RAW.pagi,RAW.malam,dcs,kls);
+
   function tbl(rows,el){
     document.getElementById(el).innerHTML=rows.length?
       '<table><thead><tr><th>Deskripsi</th><th>PIC</th><th>Klasifikasi</th><th>Status</th><th>Tgl Mulai</th><th>MTTR</th></tr></thead><tbody>'+
@@ -575,7 +675,7 @@ function renderCO(dcs,kls){
   tbl(dcs,'co-dc');tbl(kls,'co-kl');
 }
 
-function renderSP(ssp){
+function renderSP(ssp,ledger){
   const aman=ssp.filter(r=>r[5]&&r[5].includes('Aman'));
   const men=ssp.filter(r=>r[5]&&r[5].includes('Menipis'));
   const kos=ssp.filter(r=>r[5]&&r[5].includes('Kosong'));
@@ -596,6 +696,72 @@ function renderSP(ssp){
     '<table><thead><tr><th>Nama Sparepart</th><th style="text-align:right">Masuk</th><th style="text-align:right">Terpakai</th><th style="text-align:right">Sisa</th><th style="text-align:right">Min</th><th>Status</th><th>Update</th></tr></thead><tbody>'+
     ssp.map(r=>{const s=r[5]||'';return`<tr><td><b>${r[0]||'-'}</b></td><td class="mono" style="text-align:right">${r[1]||'0'}</td><td class="mono" style="text-align:right">${r[2]||'0'}</td><td class="mono" style="text-align:right;font-weight:700">${r[3]||'0'}</td><td class="mono" style="text-align:right;color:var(--text3)">${r[4]||'-'}</td><td>${s.includes('Kosong')?bd('br',s):s.includes('Menipis')?bd('by',s):bd('bg',s)}</td><td class="mono" style="color:var(--text3)">${(r[6]||'-').replace(/'/g,'')}</td></tr>`;}).join('')+
     '</tbody></table>':'<div class="empty">Belum ada data</div>';
+
+  // ── SPAREPART ANALYTICS ──
+  if(!ledger||ledger.length===0){
+    ['sp-freq','sp-trend','sp-ranking'].forEach(id=>{
+      const el=document.getElementById(id==='sp-freq'?'ch-sp-freq':id==='sp-trend'?'ch-sp-trend':'sp-ranking');
+      if(el)el.innerHTML='<div class="empty">Belum ada data ledger</div>';
+    });
+    return;
+  }
+  // Hanya baris "Keluar"
+  const keluar=ledger.filter(r=>(r[2]||'').toLowerCase()==='keluar');
+  // Frekuensi per item
+  const freq={},qty={};
+  keluar.forEach(r=>{
+    const n=(r[1]||'').trim();
+    const q=parseInt(r[5]||0)||0;
+    const tgl=(r[0]||'').replace(/'/g,'');
+    freq[n]=(freq[n]||0)+1;
+    qty[n]=(qty[n]||0)+q;
+  });
+  // Top 10 frekuensi
+  const topFreq=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  mk('ch-sp-freq',{type:'bar',data:{
+    labels:topFreq.map(e=>e[0].split(' ').slice(0,3).join(' ')),
+    datasets:[{data:topFreq.map(e=>e[1]),
+      backgroundColor:topFreq.map((_,i)=>i<3?'#C81E1E':i<6?'#C97B0A':'#0D9668'),
+      borderRadius:5,borderSkipped:false,maxBarThickness:40}]
+  },options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    categoryPercentage:0.85,barPercentage:0.9,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' kali keluar'}}},
+    scales:{x:{beginAtZero:true,grid:{color:GRID_CLR},border:{display:false},ticks:{font:{size:10},stepSize:1}},
+      y:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}});
+  // Trend harian
+  const trendDay={};
+  keluar.forEach(r=>{
+    const d=(r[0]||'').replace(/'/g,'');
+    const q=parseInt(r[5]||0)||0;
+    if(d)trendDay[d]=(trendDay[d]||0)+q;
+  });
+  const tDays=Object.keys(trendDay).sort();
+  mk('ch-sp-trend',{type:'line',data:{
+    labels:tDays.map(d=>d.split('/')[0]),
+    datasets:[{data:tDays.map(d=>trendDay[d]),
+      borderColor:'#6626D0',backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'rgba(102,38,208,.02)','rgba(102,38,208,.22)'),
+      borderWidth:2.5,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#6626D0',
+      pointBorderColor:'#fff',pointBorderWidth:2}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' unit keluar'}}},
+    scales:{y:{beginAtZero:true,grid:{color:GRID_CLR},border:{display:false},ticks:{font:{size:10}}},
+      x:{grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}});
+  // Ranking prioritas: gabung frekuensi + qty + status sisa
+  const spMap={};ssp.forEach(r=>{spMap[(r[0]||'').trim()]={sisa:parseInt(r[3]||0),min:parseInt(r[4]||0),status:r[5]||''};});
+  const ranking=topFreq.map(([nama,frek])=>{
+    const sp=spMap[nama]||{sisa:'-',min:'-',status:''};
+    const q=qty[nama]||0;
+    // Skor prioritas: kritis(status) * frekuensi
+    const krit=sp.status.includes('Kosong')?3:sp.status.includes('Menipis')?2:1;
+    return{nama,frek,q,sisa:sp.sisa,min:sp.min,status:sp.status,score:krit*frek};
+  }).sort((a,b)=>b.score-a.score);
+  document.getElementById('sp-ranking').innerHTML=ranking.length?
+    '<table><thead><tr><th>Nama Sparepart</th><th style="text-align:right">Frekuensi</th><th style="text-align:right">Total Keluar</th><th style="text-align:right">Sisa</th><th style="text-align:right">Min</th><th>Status</th><th>Prioritas</th></tr></thead><tbody>'+
+    ranking.map(r=>{
+      const pri=r.score>=6?bd('br','🔴 Kritis'):r.score>=4?bd('by','⚠️ Perhatikan'):bd('bg','✓ Normal');
+      const st=r.status.includes('Kosong')?bd('br',r.status):r.status.includes('Menipis')?bd('by',r.status):bd('bg',r.status);
+      return`<tr><td><b>${r.nama}</b></td><td class="mono" style="text-align:right">${r.frek}x</td><td class="mono" style="text-align:right">${r.q} unit</td><td class="mono" style="text-align:right;font-weight:700">${r.sisa}</td><td class="mono" style="text-align:right;color:var(--text3)">${r.min}</td><td>${st}</td><td>${pri}</td></tr>`;
+    }).join('')+'</tbody></table>':'<div class="empty">Belum ada data</div>';
 }
 
 function renderAS(saset,maset){
