@@ -710,22 +710,18 @@ function renderCO(dcs,kls){
     ?`Tim menemukan <b>${dcs.length} dari ${all.length}</b> masalah secara mandiri. Ada <b>${kls.length} keluhan</b> dari pihak luar — masih di bawah target ${TARGET_PRO}%. Tingkatkan frekuensi Daily Check.`
     :`Hanya <b>${dcs.length} dari ${all.length}</b> masalah ditemukan mandiri. <b>${kls.length} keluhan</b> datang dari pihak luar — tim perlu lebih proaktif dalam patroli harian.`;
   document.getElementById('proactivity-banner').innerHTML=
-    `<div class="pro-banner \${proCls}">
-      <div>
-        <div class="pro-score">\${proScore}<span style="font-size:22px">%</span></div>
-      </div>
-      <div class="pro-detail">
-        <div class="pro-title">Proactivity Score — KPI Divisi Maintenance</div>
-        <div class="pro-desc">\${proMsg}</div>
-      </div>
-      <div class="pro-bar-wrap">
-        <div class="pro-bar-lbl"><span>0%</span><span>Target \${TARGET_PRO}%</span><span>100%</span></div>
-        <div class="pro-bar-track"><div class="pro-bar-fill" style="width:\${Math.min(proScore,100)}%"></div></div>
-        <div style="text-align:center;margin-top:6px">
-          <span class="pro-badge">\${proBadge}</span>
-        </div>
-      </div>
-    </div>`;
+    '<div class="pro-banner '+proCls+'">'
+    +'<div><div class="pro-score">'+proScore+'<span style="font-size:22px">%</span></div></div>'
+    +'<div class="pro-detail">'
+    +'<div class="pro-title">Proactivity Score — KPI Divisi Maintenance</div>'
+    +'<div class="pro-desc">'+proMsg+'</div>'
+    +'</div>'
+    +'<div class="pro-bar-wrap">'
+    +'<div class="pro-bar-lbl"><span>0%</span><span>Target '+TARGET_PRO+'%</span><span>100%</span></div>'
+    +'<div class="pro-bar-track"><div class="pro-bar-fill" style="width:'+Math.min(proScore,100)+'%"></div></div>'
+    +'<div style="text-align:center;margin-top:6px"><span class="pro-badge">'+proBadge+'</span></div>'
+    +'</div>'
+    +'</div>';
 
   document.getElementById('co-tot').textContent=all.length;
   document.getElementById('co-sel').textContent=sel;
