@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AVI KNO — Maintenance Control Platform</title>
+<title>ADP KNO — Operations Control Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -214,37 +214,68 @@ tr:hover td{background:#F4F8FF}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:var(--surface2)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+
+/* === ADP KNO DARK GREEN EXECUTIVE THEME — generated from supplied reference === */
+:root{
+  --sb:#03110D;--sb2:#062019;--sb-border:#123B31;
+  --sb-text:#7FA99B;--sb-text2:#DCEFE8;
+  --sb-active:#063629;--sb-accent:#34D399;
+  --bg:#EEF3F0;--surface:#FFFFFF;--surface2:#F5F8F6;
+  --border:#DDE8E2;--border2:#B8CDC3;
+  --text:#081B16;--text2:#405B52;--text3:#7B9289;
+  --blue:#0F766E;--blue2:#14B8A6;--blue-bg:#E6FFFA;--blue-bd:#99F6E4;
+  --green:#047857;--green-bg:#ECFDF5;--green-bd:#A7F3D0;
+  --yellow:#B7791F;--yellow-bg:#FFFBEB;--yellow-bd:#FDE68A;
+  --red:#B91C1C;--red-bg:#FEF2F2;--red-bd:#FECACA;
+  --teal:#0D9488;--teal-bg:#F0FDFA;--teal-bd:#99F6E4;
+  --orange:#C05621;--orange-bg:#FFF7ED;--orange-bd:#FDBA74;
+  --purple:#047857;--purple-bg:#ECFDF5;--purple-bd:#A7F3D0;
+  --r:14px;--r-sm:10px;--r-xs:7px;
+  --sh:0 1px 2px rgba(3,17,13,.06),0 8px 24px rgba(3,17,13,.045);
+  --sh-md:0 16px 38px rgba(3,17,13,.12);
+}
+body{background:radial-gradient(circle at 20% 0%,rgba(16,185,129,.12),transparent 34%),linear-gradient(180deg,#F7FAF8 0%,#EEF3F0 54%,#E8F0EC 100%);color:var(--text)}
+.sb{width:232px;background:linear-gradient(180deg,#020B09 0%,#061813 52%,#03110D 100%);box-shadow:8px 0 28px rgba(3,17,13,.16)}
+.main{margin-left:232px}.sb-logo{height:66px;padding:16px 18px}.sb-mark{background:linear-gradient(135deg,#064E3B,#10B981);box-shadow:0 10px 24px rgba(16,185,129,.28);border:1px solid rgba(255,255,255,.12)}
+.sb-name{font-size:11px;letter-spacing:.7px;text-transform:uppercase}.sb-sub{font-size:10px;color:#7DD3B0;letter-spacing:1px}.sb-grp{color:#315B4E;font-size:9px;letter-spacing:1.6px;margin-top:8px}.nav{height:36px;margin:3px 9px;border-radius:10px;color:#9AB8AE;font-weight:650}.nav:hover{background:rgba(16,185,129,.08);color:#E6FFF7}.nav.active{background:linear-gradient(90deg,#064E3B,#0B3D32);border:1px solid rgba(52,211,153,.32);color:#A7F3D0;box-shadow:inset 3px 0 0 #34D399}.nav-ic{font-size:14px}.nb{background:rgba(255,255,255,.07);color:#A7F3D0}.sb-bot{border-top:1px solid rgba(167,243,208,.12)}
+.topbar{height:62px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);padding:0 26px;border-bottom:1px solid rgba(184,205,195,.65)}.pg-title{font-size:18px;font-weight:800;letter-spacing:-.35px}.pg-sub{font-size:11px;color:#516B61}.live-pill{background:#E8FFF4;border-color:#A7F3D0;color:#047857;padding:4px 10px;border-radius:7px}.tb-pill,.btn,.f-in{border-radius:9px;background:#FFFFFF;border-color:#DBE7E1}.btn:hover{background:#ECFDF5;border-color:#10B981;color:#047857;transform:translateY(-1px)}.btn-pdf{background:#064E3B;border-color:#064E3B;color:#fff}.btn-pdf:hover{background:#022C22;border-color:#022C22;color:#fff}.fbar{padding:10px 26px;background:rgba(255,255,255,.82);backdrop-filter:blur(12px)}.f-lbl{color:#047857}.content{padding:18px 26px 26px}.ref-tabs{display:flex;gap:6px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:6px;margin-bottom:16px;box-shadow:var(--sh);position:sticky;top:62px;z-index:80}.ref-tab{border:0;background:transparent;color:#405B52;font-weight:800;font-size:10px;letter-spacing:.55px;padding:8px 13px;border-radius:8px;cursor:pointer;transition:.16s}.ref-tab:hover{background:#ECFDF5;color:#047857}.ref-tab.active{background:#064E3B;color:#fff;box-shadow:0 8px 16px rgba(6,78,59,.18)}
+.krow{gap:12px}.kpi{border-radius:14px;background:linear-gradient(180deg,#fff,#FBFDFC);border:1px solid #DDE8E2;box-shadow:var(--sh);padding:15px 16px}.kpi:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:#B8E3D2}.kpi::after{height:3px}.kb::after,.kp::after{background:linear-gradient(90deg,#064E3B,#10B981)}.kg::after{background:linear-gradient(90deg,#047857,#34D399)}.kt::after{background:linear-gradient(90deg,#0F766E,#2DD4BF)}.kpi-lbl{color:#405B52;font-size:9px}.kpi-v{font-size:29px}.kb .kpi-v,.kp .kpi-v{color:#064E3B}.kpi-ico{border-radius:10px;border:1px solid rgba(16,185,129,.13)}
+.card{border-radius:14px;border:1px solid #DDE8E2;box-shadow:var(--sh);background:rgba(255,255,255,.96)}.card:hover{box-shadow:var(--sh-md);border-color:#B8E3D2}.ch{padding:13px 16px}.ct{font-size:11px;letter-spacing:.25px;text-transform:uppercase}.ctag{border-radius:999px;background:#F2F7F4;color:#516B61}.ins{background:linear-gradient(135deg,#ECFDF5 0%,#F0FDFA 100%);border-color:#BDEEDB}.ins-c{border-radius:12px}.ins-c:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}.tw table{background:#fff}th{background:#F3F8F5;color:#425F55}td{border-bottom-color:#E2ECE7}tr:hover td{background:#F0FDF4}.b{border-radius:999px}.pb{height:8px}.mttr{background:linear-gradient(135deg,#ECFDF5,#F0FDFA);border-color:#A7F3D0}.mttr-n{color:#047857}.pro-banner{border-radius:14px}.pro-score{color:#047857}.si{border-radius:10px}.dl-dot{box-shadow:0 0 0 3px rgba(16,185,129,.09)}
+@media(max-width:1100px){.sb{width:74px}.main{margin-left:74px}.sb-name,.sb-sub,.sb-grp,.nav:not(.active) .nb,.sb-ver{display:none}.nav{justify-content:center}.nav-ic{width:auto}.sb-logo{justify-content:center}.ref-tabs{overflow-x:auto}.r4,.r5,.g2,.g3,.g21,.g12,.g13{grid-template-columns:1fr!important}}
+@media(max-width:720px){.topbar{height:auto;min-height:62px;align-items:flex-start;gap:10px;flex-direction:column;padding:12px}.tb-r,.tb-l,.fbar{flex-wrap:wrap}.content{padding:12px}.ref-tabs{top:0;position:relative}.main{margin-left:0}.sb{display:none}}
+
 </style>
 </head>
 <body>
 
 <aside class="sb">
   <div class="sb-logo">
-    <div class="sb-mark">AVI</div>
-    <div><div class="sb-name">AVI KNO Maintenance</div><div class="sb-sub">Bandara Kualanamu</div></div>
+    <div class="sb-mark">ADP</div>
+    <div><div class="sb-name">AIRPORT DECISION</div><div class="sb-sub">PLATFORM KNO</div></div>
   </div>
-  <div class="sb-grp">Monitoring</div>
-  <button class="nav active" onclick="switchNav(this,'overview')"><span class="nav-ic">◈</span>Overview<span class="nb" id="nb-overview">—</span></button>
-  <button class="nav" onclick="switchNav(this,'preventive')"><span class="nav-ic">⚙</span>Preventive<span class="nb" id="nb-preventive">—</span></button>
-  <button class="nav" onclick="switchNav(this,'corrective')"><span class="nav-ic">⚒</span>Corrective<span class="nb" id="nb-corrective">—</span></button>
-  <div class="sb-grp">Manajemen</div>
-  <button class="nav" onclick="switchNav(this,'sparepart')"><span class="nav-ic">◎</span>Sparepart<span class="nb" id="nb-sparepart">—</span></button>
-  <button class="nav" onclick="switchNav(this,'aset')"><span class="nav-ic">▦</span>Aset<span class="nb" id="nb-aset">—</span></button>
-  <div class="sb-bot"><div class="sb-ver">v3.1 · Mei 2026</div></div>
+  <div class="sb-grp">Platform</div>
+  <button class="nav active" onclick="switchNav(this,'overview')"><span class="nav-ic">✦</span>Ops Control<span class="nb" id="nb-overview">—</span></button>
+  <button class="nav" onclick="switchNav(this,'preventive')"><span class="nav-ic">▣</span>Preventive Flow<span class="nb" id="nb-preventive">—</span></button>
+  <button class="nav" onclick="switchNav(this,'corrective')"><span class="nav-ic">△</span>Corrective Control<span class="nb" id="nb-corrective">—</span></button>
+  <div class="sb-grp">Resources</div>
+  <button class="nav" onclick="switchNav(this,'sparepart')"><span class="nav-ic">◌</span>Resource Stock<span class="nb" id="nb-sparepart">—</span></button>
+  <button class="nav" onclick="switchNav(this,'aset')"><span class="nav-ic">▤</span>Asset Sustainability<span class="nb" id="nb-aset">—</span></button>
+  <div class="sb-bot"><div class="sb-ver">Project Update · Mei 2026</div></div>
 </aside>
 
 <div class="main">
   <div class="topbar">
     <div class="tb-l">
-      <div><div class="pg-title" id="page-title">Operations Overview</div><div class="pg-sub">Divisi Electrical &amp; Maintenance — Bandara Kualanamu</div></div>
+      <div><div class="pg-title" id="page-title">KNO Operations Control</div><div class="pg-sub">Project Update 13 Mei 2026 · All Terminals · Domestic &amp; International</div></div>
       <div class="divider"></div>
-      <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+      <div class="live-pill"><div class="live-dot"></div>BUSY</div>
     </div>
     <div class="tb-r">
       <div class="tb-pill">Update: <b id="last-up">--</b></div>
       <div class="clk" id="clock">--</div>
       <button class="btn" onclick="loadDashboard()">↻ Refresh</button>
-      <button class="btn btn-pdf" onclick="exportPDF()">↓ PDF</button>
+      <button class="btn btn-pdf" onclick="exportPDF()">↓ Executive PDF</button>
     </div>
   </div>
 
@@ -261,6 +292,14 @@ tr:hover td{background:#F4F8FF}
   </div>
 
   <div class="content" id="main-content">
+
+    <div class="ref-tabs" aria-label="Dashboard module tabs">
+      <button class="ref-tab active" onclick="switchNav(document.querySelector(".nav[onclick*=overview]"),'overview');document.querySelectorAll('.ref-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')">OVERVIEW</button>
+      <button class="ref-tab" onclick="switchNav(document.querySelector(".nav[onclick*=preventive]"),'preventive');document.querySelectorAll('.ref-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')">PASSENGER FLOW</button>
+      <button class="ref-tab" onclick="switchNav(document.querySelector(".nav[onclick*=corrective]"),'corrective');document.querySelectorAll('.ref-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')">TRAFFIC MOVEMENT</button>
+      <button class="ref-tab" onclick="switchNav(document.querySelector(".nav[onclick*=sparepart]"),'sparepart');document.querySelectorAll('.ref-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')">RESOURCE</button>
+      <button class="ref-tab" onclick="switchNav(document.querySelector(".nav[onclick*=aset]"),'aset');document.querySelectorAll('.ref-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active')">EXCEPTION</button>
+    </div>
 
     <!-- OVERVIEW -->
     <div class="sec active" id="sec-overview">
@@ -421,7 +460,7 @@ setInterval(()=>{
   document.getElementById('clock').textContent=n.toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
 },1000);
 
-const TITLES={overview:'Operations Overview',preventive:'Preventive Maintenance',corrective:'Corrective Maintenance',sparepart:'Manajemen Sparepart',aset:'Pemeliharaan Aset'};
+const TITLES={overview:'KNO Operations Control',preventive:'Preventive Flow',corrective:'Corrective Control',sparepart:'Resource Stock Control',aset:'Asset Sustainability'};
 function switchNav(el,id){
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
@@ -869,7 +908,7 @@ async function exportPDF(){
   btn.textContent='⏳ ...';btn.disabled=true;
   try{
     const{jsPDF}=window.jspdf;
-    const cv=await html2canvas(document.getElementById('main-content'),{scale:1.5,useCORS:true,backgroundColor:'#F2F5F9'});
+    const cv=await html2canvas(document.getElementById('main-content'),{scale:1.5,useCORS:true,backgroundColor:'#EEF3F0'});
     const img=cv.toDataURL('image/jpeg',.85);
     const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
     const w=pdf.internal.pageSize.getWidth(),h=(cv.height*w)/cv.width;
