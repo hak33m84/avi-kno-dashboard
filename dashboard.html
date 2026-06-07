@@ -248,20 +248,22 @@ tr:hover td{background:#F4F8FF}
     <div class="tb-r">
       <div class="tb-pill">Update: <b id="last-up">--</b></div>
       <div class="clk" id="clock">--</div>
-      <button class="btn" onclick="loadDashboard()">↻ Refresh</button>
+      <button class="btn" onclick="loadDashboard()" title="Refresh data">↻ Refresh</button>
       <button class="btn btn-pdf" onclick="exportPDF()">↓ PDF</button>
     </div>
   </div>
 
   <div class="fbar">
-    <span class="f-lbl">Filter</span>
-    <input type="date" class="f-in" id="f-dari" onchange="applyFilter()">
+    <span class="f-lbl">Bulan</span>
+    <select class="f-in" id="f-bulan" onchange="gantiBulan()" style="width:150px;cursor:pointer;font-weight:600"></select>
+    <div class="f-sep"></div>
+    <span class="f-lbl">Tanggal</span>
+    <input type="date" class="f-in" id="f-dari" onchange="applyFilter()" title="Dari tanggal">
     <span style="font-size:11px;color:var(--text3);font-weight:500">—</span>
-    <input type="date" class="f-in" id="f-sampai" onchange="applyFilter()">
+    <input type="date" class="f-in" id="f-sampai" onchange="applyFilter()" title="Sampai tanggal">
     <div class="f-sep"></div>
     <input type="text" class="f-in" id="f-pic" placeholder="Teknisi / PIC" style="width:130px" oninput="applyFilter()">
     <input type="text" class="f-in" id="f-kat" placeholder="Kategori aset" style="width:140px" oninput="applyFilter()">
-    <button class="btn" onclick="resetFilter()">✕ Reset</button>
     <span class="f-count" id="f-count"></span>
   </div>
 
@@ -418,7 +420,8 @@ const SID='13lSQM0jI6fy6HHfVvTIHE7zYLR51c9Cpmvn4xt7tSsU';
 const KEY='AIzaSyAj1CUEJh-VFPgWh7lI1Rs_CfGogfA2gkc';
 const BULAN_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const now=new Date();
-const BLN=BULAN_ID[now.getMonth()]+' '+now.getFullYear();
+let BLN=BULAN_ID[now.getMonth()]+' '+now.getFullYear();
+function getBLN(){ return BLN; }
 
 // Chart.js config
 Chart.defaults.font.family="'Figtree',sans-serif";
@@ -589,6 +592,39 @@ function renderTeknisi(pagi,malam,dcs,kls){
     plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:10,boxHeight:10,borderRadius:3,useBorderRadius:true}}},
     scales:{y:{beginAtZero:true,stacked:true,grid:{color:GRID_CLR},border:{display:false},ticks:{stepSize:1,font:{size:10}}},
       x:{stacked:true,grid:{display:false},border:{display:false},ticks:{font:{size:10}}}}}});
+}
+
+function populateMonthSelector(){
+  const sel=document.getElementById('f-bulan');
+  if(!sel)return;
+  sel.innerHTML='';
+  // Generate 12 bulan ke belakang + bulan berjalan
+  const now=new Date();
+  const options=[];
+  for(let i=0;i<13;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const label=BULAN_ID[d.getMonth()]+' '+d.getFullYear();
+    options.push(label);
+  }
+  options.forEach((opt,i)=>{
+    const o=document.createElement('option');
+    o.value=opt;
+    o.textContent=opt;
+    if(i===0)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function gantiBulan(){
+  const sel=document.getElementById('f-bulan');
+  BLN=sel.value;
+  // Reset filter
+  ['f-dari','f-sampai','f-pic','f-kat'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value='';
+  });
+  document.getElementById('f-count').textContent='';
+  loadDashboard();
 }
 
 async function loadDashboard(){
@@ -965,8 +1001,20 @@ async function exportPDF(){
   btn.textContent='↓ PDF';btn.disabled=false;
 }
 
-loadDashboard();
-setInterval(loadDashboard,5*60*1000);
+document.addEventListener('DOMContentLoaded', function(){
+  populateMonthSelector();
+  loadDashboard();
+});
+setInterval(()=>{
+  // Auto-update selector kalau bulan berganti
+  const now=new Date();
+  const currentBLN=BULAN_ID[now.getMonth()]+' '+now.getFullYear();
+  const sel=document.getElementById('f-bulan');
+  if(sel&&sel.options[0]&&sel.options[0].value!==currentBLN){
+    populateMonthSelector();
+  }
+  if(BLN===sel?.options[0]?.value) loadDashboard();
+},5*60*1000);
 </script>
 </body>
 </html>
