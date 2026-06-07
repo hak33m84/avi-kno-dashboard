@@ -679,7 +679,8 @@ function renderOV(pagi,malam,dcs,kls,saset,ssp){
 
   // PM table
   // Sort by tanggal descending sebelum ambil 8 terbaru
-  const allPMShift=[...pagi.map(r=>[...r,'Pagi']),...malam.map(r=>[...r,'Malam'])];
+  // Normalize ke 8 kolom dulu (A-H), baru tambah shift di index 8
+  const allPMShift=[...pagi.map(r=>normRowShift(r,'Pagi')),...malam.map(r=>normRowShift(r,'Malam'))];
   allPMShift.sort((a,b)=>{
     const pa=a[0]?a[0].replace(/'/g,'').split('/'):[];
     const pb=b[0]?b[0].replace(/'/g,'').split('/'):[];
@@ -711,6 +712,12 @@ function renderOV(pagi,malam,dcs,kls,saset,ssp){
 }
 
 let PR_ALL=[];
+function normRowShift(r,shift){
+  const row=Array(8).fill('');
+  for(let i=0;i<Math.min(r.length,8);i++) row[i]=r[i]||'';
+  row.push(shift);
+  return row;
+}
 function filterShift(shift){
   document.querySelectorAll('.shift-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sbtn-'+shift).classList.add('active');
@@ -720,7 +727,7 @@ function filterShift(shift){
 }
 function renderPRTable(rows){
   document.getElementById('pr-tbl').innerHTML=rows.length?
-    '<table><thead><tr><th>Tanggal</th><th>Nama Pemeliharaan</th><th>Personel</th><th>Shift</th><th>Jam Mulai</th><th>Jam Selesai</th><th>Status</th><th>Catatan</th><th>Foto</th></tr></thead><tbody>'+
+    '<table><thead><tr><th>Tanggal</th><th>Nama Pemeliharaan</th><th>Personel</th><th>Shift</th><th>Jam Mulai</th><th>Jam Selesai</th><th>Status</th><th>Catatan</th><th title="Klik icon untuk lihat foto dokumentasi">📷 Dok</th></tr></thead><tbody>'+
     rows.map(r=>{
       const dok=r[6]&&r[6].startsWith('http')?
         '<a href="'+r[6]+'" target="_blank" title="Lihat foto dokumentasi" style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--blue-bg);border:1px solid var(--blue-bd);color:var(--blue);text-decoration:none;font-size:14px">📷</a>':
@@ -751,11 +758,20 @@ function renderPR(pagi,malam){
   const days=Object.keys(dm).sort();
   mk('ch-pm-hari',{type:'bar',data:{labels:days.map(d=>d.split('/')[0]),datasets:[{data:days.map(d=>dm[d]),backgroundColor:c=>vGrad(c.chart.ctx,c.chart.chartArea,'#0782A8','#22C3E6'),borderRadius:6,borderSkipped:false,maxBarThickness:54}]},options:chartOpts()});
   mk('ch-pm-shift',{type:'doughnut',data:{labels:['Shift Pagi','Shift Malam'],datasets:[{data:[pagi.length,malam.length],backgroundColor:['#0782A8','#0D9668'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
-  const all=[...pagi.map(r=>[...r,'Pagi']),...malam.map(r=>[...r,'Malam'])];
-  document.getElementById('pr-tbl').innerHTML=all.length?
-    '<table><thead><tr><th>Tanggal</th><th>Nama Pemeliharaan</th><th>Personel</th><th>Shift</th><th>Jam Mulai</th><th>Jam Selesai</th><th>Status</th><th>Catatan</th></tr></thead><tbody>'+
-    all.slice().reverse().map(r=>`<tr><td class="mono">${r[0]||'-'}</td><td><b>${r[1]||'-'}</b></td><td>${r[2]||'-'}</td><td>${shBd(r[8])}</td><td class="mono">${r[4]||'-'}</td><td class="mono">${r[5]||'-'}</td><td>${bd('bg',r[3]||'Sudah di rawat')}</td><td style="color:var(--text3);font-size:11px">${r[7]||'-'}</td></tr>`).join('')+
-    '</tbody></table>':'<div class="empty">Belum ada data</div>';
+  // Normalize + sort descending + assign PR_ALL
+  const allNorm=[...pagi.map(r=>normRowShift(r,'Pagi')),...malam.map(r=>normRowShift(r,'Malam'))];
+  allNorm.sort((a,b)=>{
+    const pa=(a[0]||'').replace(/'/g,'').split('/');
+    const pb=(b[0]||'').replace(/'/g,'').split('/');
+    const da=pa.length===3?new Date(+pa[2],+pa[1]-1,+pa[0]):new Date(0);
+    const db=pb.length===3?new Date(+pb[2],+pb[1]-1,+pb[0]):new Date(0);
+    return db-da;
+  });
+  PR_ALL=allNorm;
+  document.getElementById('pr-count').textContent=allNorm.length+' laporan';
+  const sbAll=document.getElementById('sbtn-all');
+  if(sbAll)sbAll.classList.add('active');
+  renderPRTable(allNorm);
 }
 
 function renderCO(dcs,kls){
