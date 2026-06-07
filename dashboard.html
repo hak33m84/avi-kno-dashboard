@@ -629,16 +629,23 @@ function gantiBulan(){
 
 async function loadDashboard(){
   document.getElementById('last-up').textContent=new Date().toLocaleTimeString('id-ID');
+  // Reset RAW dulu supaya data lama tidak tersisa
+  RAW={pagi:[],malam:[],dcs:[],kls:[],saset:[],maset:[],ssp:[],ledger:[]};
   try{
+    // Fetch sheet bulanan dengan safe fallback (return [] kalau sheet tidak ada)
+    async function safeFetch(range){
+      try{ return await fetchSheet(range); }
+      catch(e){ return []; }
+    }
     const[pp,pm,dc,kl,sa,ma,ss,stokLedger]=await Promise.all([
-      fetchSheet(`'Prev Pagi ${BLN}'!A:H`),
-      fetchSheet(`'Prev Malam ${BLN}'!A:H`),
-      fetchSheet(`'Daily Check EF ${BLN}'!A:N`),
-      fetchSheet(`'Laporan Keluhan ${BLN}'!A:N`),
-      fetchSheet("'Summary Aset'!A:G"),
-      fetchSheet("'Master Aset'!A:H"),
-      fetchSheet("'Summary SP'!A:G"),
-      fetchSheet("'Stok SP'!A:K"),
+      safeFetch("'Prev Pagi "+BLN+"'!A:H"),
+      safeFetch("'Prev Malam "+BLN+"'!A:H"),
+      safeFetch("'Daily Check EF "+BLN+"'!A:N"),
+      safeFetch("'Laporan Keluhan "+BLN+"'!A:N"),
+      safeFetch("'Summary Aset'!A:G"),
+      safeFetch("'Master Aset'!A:H"),
+      safeFetch("'Summary SP'!A:G"),
+      safeFetch("'Stok SP'!A:K"),
     ]);
     RAW={pagi:pp.slice(1),malam:pm.slice(1),dcs:dc.slice(1),kls:kl.slice(1),saset:sa.slice(1),maset:ma.slice(1),ssp:ss.slice(1),ledger:stokLedger.slice(1)};
     document.getElementById('nb-preventive').textContent=RAW.pagi.length+RAW.malam.length;
