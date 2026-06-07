@@ -508,9 +508,9 @@ const bd=(cls,t)=>`<span class="b ${cls}">${t}</span>`;
 function stBd(s){
   const l=(s||'').toLowerCase();
   if(l.includes('selesai')||l.includes('sudah'))return bd('bg',s||'-');
-  if(l.includes('penanganan')||l.includes('proses'))return bd('by',s||'-');
+  if(l.includes('penanganan')||l.includes('proses')||l==='open'||l==='pending')return bd('by',s||'-');
   if(l.includes('kosong')||l.includes('belum'))return bd('br',s||'-');
-  return bd('bb',s||'-');
+  return bd('by',s||'-');
 }
 function klBd(k){return(k||'').toLowerCase()==='important'?bd('br',k):bd('bb',k||'-')}
 function shBd(s){return s==='Pagi'?bd('bt','Pagi'):bd('bg','Malam')}
@@ -556,7 +556,7 @@ function renderTeknisi(pagi,malam,dcs,kls){
     if(!corTek[t])corTek[t]={total:0,selesai:0,pending:0,mttrSum:0,mttrCount:0};
     corTek[t].total++;
     if((r[5]||'').toLowerCase().includes('selesai'))corTek[t].selesai++;
-    else corTek[t].pending++;
+    else{const s=(r[5]||'').toLowerCase();if(!s.includes('selesai')&&!s.includes('sudah'))corTek[t].pending++;}
     const m=parseInt(r[12]||0);
     if(m>0){corTek[t].mttrSum+=m;corTek[t].mttrCount++;}
   });
@@ -662,7 +662,7 @@ async function loadDashboard(){
 
 function renderOV(pagi,malam,dcs,kls,saset,ssp){
   const allPM=[...pagi,...malam],allCor=[...dcs,...kls];
-  const pend=allCor.filter(r=>(r[5]||'').toLowerCase().includes('penanganan')).length;
+  const pend=allCor.filter(r=>{const s=(r[5]||'').toLowerCase();return s.includes('penanganan')||s==='open'||s==='pending'||s==='belum';}).length;
   const totA=saset.reduce((a,r)=>a+parseInt(r[1]||0),0);
   const sudA=saset.reduce((a,r)=>a+parseInt(r[2]||0),0);
   const pctA=totA>0?Math.round(sudA/totA*100):0;
@@ -822,7 +822,7 @@ function renderPR(pagi,malam){
 function renderCO(dcs,kls){
   const all=[...dcs,...kls];
   const sel=all.filter(r=>(r[5]||'').toLowerCase().includes('selesai')).length;
-  const pen=all.filter(r=>(r[5]||'').toLowerCase().includes('penanganan')).length;
+  const pen=all.filter(r=>{const s=(r[5]||'').toLowerCase();return s.includes('penanganan')||s==='open'||s==='pending'||s==='belum';}).length;
   const imp=all.filter(r=>(r[3]||'').toLowerCase()==='important').length;
   const rate=all.length?Math.round(sel/all.length*100):0;
   // Proactivity Score
@@ -862,7 +862,7 @@ function renderCO(dcs,kls){
   const mn=mRows.length?Math.min(...mRows.map(r=>parseInt(r[12]||0))):null;
   document.getElementById('mttr-box').innerHTML=avg!==null?
     `<div class="mttr"><div><div class="mttr-n">${avg}</div><div class="mttr-u">jam</div></div><div class="mttr-d"><div class="mttr-l">Rata-rata MTTR</div><div class="mttr-s">Mean Time To Repair · dari ${mRows.length} tiket selesai</div><div class="mttr-s" style="margin-top:3px">Min <b style="color:var(--text)">${mn}j</b> &nbsp;·&nbsp; Max <b style="color:var(--text)">${mx}j</b></div></div></div>`:'';
-  const lain=all.length-sel-pen;
+  const lain=Math.max(all.length-sel-pen,0);
   mk('ch-cor-status',{type:'doughnut',data:{labels:['Selesai','Pending','Lainnya'],datasets:[{data:[sel,pen,Math.max(lain,0)],backgroundColor:['#0D9668','#C97B0A','#8FA3BB'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Figtree',size:11},padding:10,boxWidth:8,borderRadius:4}}}}});
   // Pisah: Daily Check EF vs Laporan Keluhan per tanggal
   const dcD={},klD={};
